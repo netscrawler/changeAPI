@@ -2,6 +2,7 @@ package grpcapp
 
 import (
 	convertgrpc "converter/internal/grpc/cnvrt"
+	"converter/internal/services/converter"
 	"fmt"
 	"google.golang.org/grpc"
 	"log/slog"
@@ -18,8 +19,8 @@ func New(
 	log *slog.Logger,
 	port int) *App {
 	gRPCServer := grpc.NewServer()
-
-	convertgrpc.Register(gRPCServer)
+	convert := converter.New(log)
+	convertgrpc.Register(gRPCServer, convert)
 
 	return &App{
 		log:        log,

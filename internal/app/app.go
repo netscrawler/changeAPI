@@ -16,6 +16,7 @@ func New(
 	tokenTTl time.Duration) *App {
 	//TODO: инициализировать хранилище
 	//TODO: init convert service
+
 	grpcApp := grpcapp.New(log, grpcPort)
 	return &App{
 		GRPCSrv: grpcApp,
