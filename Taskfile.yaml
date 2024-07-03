@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  runServer:
+    aliases:
+      - run
+    desc: "Run grpc service"
+    cmds:
+     - go run cmd/converter/main.go --config .\config\local.yaml
