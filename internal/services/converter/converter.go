@@ -42,7 +42,6 @@ func (c *Converter) Convert(
 		return 0, 0, fmt.Errorf("%s: %w", op, err)
 	}
 
-	convertedAmount = uint32(float32(amount) * rate.Rate)
-
+	convertedAmount = uint32(float32(amount) / rate.Rate)
 	return convertedAmount, rate.Rate, nil
 }
