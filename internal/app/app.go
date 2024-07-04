@@ -3,7 +3,6 @@ package app
 import (
 	grpcapp "converter/internal/app/grpc"
 	"log/slog"
-	"time"
 )
 
 type App struct {
@@ -12,8 +11,7 @@ type App struct {
 
 func New(
 	log *slog.Logger,
-	grpcPort int,
-	tokenTTl time.Duration) *App {
+	grpcPort int) *App {
 	//TODO: инициализировать хранилище
 	//TODO: init convert service
 
