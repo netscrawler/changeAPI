@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+ghz --insecure --proto="C:\Users\maria\Documents\GitHub\protoss\proto\changeAPI\changeAPI.proto" --call=Converter/Convert --n=1000 --c=10 localhost:44044

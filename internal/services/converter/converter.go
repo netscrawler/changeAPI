@@ -35,7 +35,7 @@ func (c *Converter) Convert(
 	)
 	log.Info("convertation")
 	var convertedAmount uint32
-	//TODO extract rate
+
 	rate, err := rateExtract.GetExchangeRate(currency)
 	if err != nil {
 		log.Error("Error extracting rate", sl.Err(err))

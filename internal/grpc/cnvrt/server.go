@@ -6,7 +6,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log/slog"
+	"os"
 )
+
+type response struct {
+	ConvertedAmount   uint32
+	Rate              float32
+	ConvertedAmo      uint32
+	ConvertedCurrency string
+}
 
 type Converter interface {
 	Convert(ctx context.Context,
@@ -28,20 +37,31 @@ func (s *serverAPI) Convert(
 	ctx context.Context,
 	req *cnvrtv1.ConvertRequest) (
 	*cnvrtv1.ConvertResponse, error) {
+
+	log := setupLogger()
+	log.Info("convertationRequest", slog.Any("req", req))
+
 	if !isValidCurrency(req.GetTargetCurrency()) {
 		return nil, status.Error(codes.InvalidArgument, "Invalid target currency")
 	}
 
 	convertedAmount, rate, err := s.convert.Convert(ctx, req.GetAmount(), req.GetTargetCurrency())
+	baseAmount := req.GetAmount()
+	convertedAmo := convertedAmount
+	convertedCurrency := req.GetTargetCurrency()
+	Rate := rate
+	r := response{baseAmount, rate, convertedAmo, convertedCurrency}
+	log.Info("ConvertationResponse", slog.Any("res", r))
+
 	if err != nil {
 		//todo error handler
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
 	return &cnvrtv1.ConvertResponse{
-		BaseAmount:        req.GetAmount(),
-		ConvertedAmount:   convertedAmount,
-		ConvertedCurrency: req.GetTargetCurrency(),
-		Rate:              rate,
+		BaseAmount:        baseAmount,
+		ConvertedAmount:   convertedAmo,
+		ConvertedCurrency: convertedCurrency,
+		Rate:              Rate,
 	}, nil
 }
 
@@ -56,4 +76,12 @@ func isValidCurrency(currency string) bool {
 		return true
 	}
 	return false
+}
+
+func setupLogger() *slog.Logger {
+	var log *slog.Logger
+	log = slog.New(
+		slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}),
+	)
+	return log
 }
